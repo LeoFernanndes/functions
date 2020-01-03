@@ -32,3 +32,59 @@ def naive_data_preparation(dataset):
   for column in dataset.columns:
     if dataset[column].dtype == 'object':
       dataset[column] = le.fit_transform(dataset[column])
+
+
+
+
+def classifier_accuracy_graph(dataset, classifier, iterations= 5):  
+  
+  '''
+  docstring
+  '''
+
+
+  from sklearn.metrics import accuracy_score
+  from sklearn.model_selection import train_test_split
+  import matplotlib.pyplot as plt
+  
+
+  colunas = dataset.columns
+
+  accuracy_list_ = []
+  x_axis_ = []
+  y_axis_ac = []
+  colunas_ = []
+
+  for feat in colunas[:-1]:
+
+    colunas_.append(feat)
+    accuracy_list_ = []
+    
+    for it in range(iterations):
+          
+      x_train_, x_test_, y_train_, y_test_ = train_test_split(dataset[colunas_], dataset[colunas[-1]], test_size= 0.25, random_state= it)
+
+
+      '''
+
+      clf_ = LinearDiscriminantAnalysis(n_components=None, priors=None, shrinkage=None,
+                            solver='svd', store_covariance=False, tol=0.0001)
+
+      '''
+
+      clf_ = classifier
+
+
+      clf_.fit(x_train_, y_train_)
+      y_pred_ = clf_.predict(x_test_)
+
+      accuracy_list_.append(accuracy_score(y_pred_, y_test_))
+            
+    x_axis_.append(feat)
+    y_axis_ac.append(pd.Series(accuracy_list_).mean())
+    
+  plt.title(str(classifier).split('(')[0])
+  plt.plot(x_axis_, y_axis_ac)
+  plt.xticks(rotation= 45)
+  plt.grid()
+  plt.show()
