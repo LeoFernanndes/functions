@@ -46,7 +46,8 @@ def classifier_accuracy_graph(dataset, classifier, iterations= 5):
   from sklearn.metrics import accuracy_score
   from sklearn.model_selection import train_test_split
   import matplotlib.pyplot as plt
-  
+  import pandas as pd 
+
 
   colunas = dataset.columns
 
