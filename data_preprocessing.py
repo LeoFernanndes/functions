@@ -132,3 +132,36 @@ def classification_stakcing_model(dataset, model, df_resultados, iterations= 7, 
   final_ = accuracy_score(final, dataset[dataset.columns[-1]])
 
   print('Accuracy score {} for {}'.format(final_, (str(model).split('(')[0])))
+
+
+
+
+  def classification_stakcing_model_test(dataset, test_dataset, model, df_resultados, iterations= 7, folds= 20):
+
+
+  #df_resultados_ = pd.DataFrame({'PassengerId': titanic['PassengerId']})
+
+  from sklearn.model_selection import train_test_split
+  from sklearn.metrics import accuracy_score
+  import pandas as pd
+
+  colunas = dataset.columns[0: -1]
+
+      
+  for fold in range(folds):
+
+    for it in range(iterations):
+
+      x_train_, x_test_, y_train_, y_test_ = train_test_split(dataset[dataset.columns[0:-1]], dataset[dataset.columns[-1]], test_size= 0.33, random_state= ((it+it**2)*fold))
+
+      clf_ = model
+      
+      clf_.fit(x_train_, y_train_)
+      y_pred_ = clf_.predict(test_dataset[colunas])
+
+                
+      dataframe_ = pd.DataFrame({it: y_pred_}, index= test_dataset.index)
+      df_resultados = pd.concat([df_resultados, dataframe_], axis= 1)
+
+
+  return df_resultados.mode(axis= 1)[0]
