@@ -89,3 +89,40 @@ def classifier_accuracy_graph(dataset, classifier, iterations= 5):
   plt.xticks(rotation= 45)
   plt.grid()
   plt.show()
+
+
+
+
+  def classification_stakcing_model(dataset, model, df_resultados, iterations= 7, folds= 20):
+
+  import pandas as pd
+  from sklearn.model_selection import train_test_split
+  from sklearn.metrics import accuracy_score
+
+  x_axis_ = []
+  y_axis_ac = []
+  
+  for fold in range(folds):
+    
+    accuracy_list_ = []
+    f1_list_ = []
+    
+
+    for it in range(iterations):
+
+      x_train_, x_test_, y_train_, y_test_ = train_test_split(dataset[dataset.columns[0:-1]], dataset[dataset.columns[-1]], test_size= 0.25, random_state= fold*it)
+
+      clf_ = model
+     
+      clf_.fit(x_train_, y_train_)
+      y_pred_ = clf_.predict(x_test_)
+
+      accuracy_list_.append(accuracy_score(y_pred_, y_test_))
+          
+      dataframe_ = pd.DataFrame({it: y_pred_}, index= y_test_.index)
+      df_resultados = pd.concat([df_resultados, dataframe_], axis= 1)
+
+  final = df_resultados.mode(axis= 1)[0]
+  final_ = accuracy_score(final, dataset[dataset.columns[-1]])
+
+  print('Accuracy score {} for {}'.format(final_, (str(model).split('(')[0])))
