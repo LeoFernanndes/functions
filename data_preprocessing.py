@@ -93,7 +93,7 @@ def classifier_accuracy_graph(dataset, classifier, iterations= 5):
 
 
 
- def classification_stakcing_model(dataset, model, df_resultados, iterations= 7, folds= 20):
+def classification_stakcing_model(dataset, model, df_resultados, iterations= 7, folds= 20):
 
   import pandas as pd
   from sklearn.model_selection import train_test_split
