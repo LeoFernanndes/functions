@@ -96,9 +96,9 @@ def classifier_accuracy_graph(dataset, classifier, iterations= 5):
 def classification_stakcing_model(dataset, model, df_resultados, iterations= 7, folds= 20):
 
 
-	'''
-	df_resultados_ = pd.DataFrame({'PassengerId': titanic['PassengerId']})
-	'''
+	
+	#df_resultados_ = pd.DataFrame({'PassengerId': titanic['PassengerId']})
+	
 
 
   import pandas as pd
