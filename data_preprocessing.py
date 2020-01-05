@@ -155,3 +155,54 @@ def classification_stakcing_model_test(dataset, test_dataset, model, df_resultad
             df_resultados = pd.concat([df_resultados, dataframe_], axis=1)
 
     return df_resultados.mode(axis=1)[0]
+
+
+def cross_val_binnary_classification(dataframe, classifier, iterations=100, plot=True):
+
+    import matplotlib.pyplot as plt
+    from sklearn.metrics import f1_score, accuracy_score
+    from sklearn.model_selection import train_test_split
+    import pandas as pd
+    import numpy as np
+
+    x_axis = []
+    y_axis_f1 = []
+    y_axis_accuracy = []
+
+    for i in range(iterations):
+
+        x_train, x_test, y_train, y_test = train_test_split(dataframe[dataframe.columns[:-1]],
+                                                            dataframe[dataframe.columns[-1]], test_size=0.3, random_state=i * 3)
+
+        clf = classifier
+
+        clf.fit(x_train, y_train)
+
+        y_pred = clf.predict(x_test)
+
+        x_axis.append(i)
+        y_axis_accuracy.append(accuracy_score(y_pred, y_test))
+        y_axis_f1.append(f1_score(y_pred, y_test))
+
+    x_axis_s = pd.Series(x_axis)
+    y_axis_accuracy_s = pd.Series(y_axis_accuracy)
+    y_axis_f1_s = pd.Series(y_axis_f1)
+
+    if plot == True:
+        plt.title(str(classifier).split('(')[0])
+        plt.plot(x_axis_s, y_axis_accuracy_s)
+        plt.plot(x_axis_s, y_axis_f1_s)
+        plt.show()
+
+        print('Accuracy: {} std {}, f1: {} std {}'.format(y_axis_accuracy_s.mean(
+        ), y_axis_accuracy_s.std(), y_axis_f1_s.mean(), y_axis_f1_s.std()))
+
+    elif plot == False:
+        print(str(classifier).split('(')[0])
+        print('Accuracy: {} std {}, f1: {} std {}'.format(y_axis_accuracy_s.mean(
+        ), y_axis_accuracy_s.std(), y_axis_f1_s.mean(), y_axis_f1_s.std()))
+
+    else:
+        print(str(classifier).split('(')[0])
+        print('Accuracy: {} std {}, f1: {} std {}'.format(y_axis_accuracy_s.mean(
+        ), y_axis_accuracy_s.std(), y_axis_f1_s.mean(), y_axis_f1_s.std()))
