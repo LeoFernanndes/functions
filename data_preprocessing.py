@@ -15,12 +15,20 @@ def naive_data_preparation(dataset):
     naive label encoding without concerns about the suitability of dummy variables.
 
     '''
-
+    import pandas as pd
     from sklearn.preprocessing import LabelEncoder
 
     for column in dataset.columns:
-        if dataset[column].dtype != 'object':
+        if dataset[column].dtype == 'object':
+            dataset[column] = dataset[column].astype('str')
+            dataset[column].fillna(dataset[column].mode(), inplace=True)
+
+        elif dataset[column].dtype == 'int':
+            dataset[column].fillna(dataset[column].mode(), inplace=True)
+
+        elif dataset[column].dtype == 'float':
             dataset[column].fillna(dataset[column].mean(), inplace=True)
+
         else:
             dataset[column] = dataset[column].astype('str')
             dataset[column].fillna(dataset[column].mode(), inplace=True)
